@@ -11,7 +11,7 @@ namespace Universum.Controllers
         [HttpGet]
         public async Task<ActionResult> CurrentPrice(string symbol)
         {
-            string url = @$"https://finance.yahoo.com/quote/{symbol}p={symbol}";
+            string url = @$"https://finance.yahoo.com/quote/{symbol}";
 
             HtmlWeb htmlWeb = new HtmlWeb();
             HtmlDocument htmlDocument = await Task.Factory.StartNew(() => htmlWeb.Load(url));
