@@ -18,7 +18,8 @@ namespace Universum.Controllers
             //var nodes = htmlDocument.DocumentNode.SelectNodes(xPath);
             //return nodes.Select(n => n.InnerText);
 
-            return View(htmlDocument.DocumentNode.InnerText);
+            var result = htmlDocument.DocumentNode.InnerText;
+            return Json(new { Content= result });
         }
 
     }
