@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HtmlAgilityPack;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Universum.Controllers
 {
@@ -7,9 +9,16 @@ namespace Universum.Controllers
     public class UniversumController : Controller
     {
         [HttpGet]
-        public ActionResult CurrentPrice(string symbol)
+        public async Task<ActionResult> CurrentPrice(string symbol)
         {
-            return View();
+            string url = @$"https://finance.yahoo.com/quote/{symbol}p={symbol}";
+
+            HtmlWeb htmlWeb = new HtmlWeb();
+            HtmlDocument htmlDocument = await Task.Factory.StartNew(() => htmlWeb.Load(url));
+            //var nodes = htmlDocument.DocumentNode.SelectNodes(xPath);
+            //return nodes.Select(n => n.InnerText);
+
+            return View(htmlDocument.DocumentNode.InnerText);
         }
 
     }
