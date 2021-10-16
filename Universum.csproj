@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.37" />
+    <PackageReference Include="SimpleBrowser" Version="0.6.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.2" />
   </ItemGroup>

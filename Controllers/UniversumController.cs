@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
+using SimpleBrowser;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Universum.Controllers
@@ -35,6 +37,26 @@ namespace Universum.Controllers
             var result = nodes.Select(n => n.InnerText);
 
             return Json(result);
+        }
+
+        [HttpGet]
+        public ActionResult TargetPrice(string symbol)
+        {
+            // https://github.com/SimpleBrowserDotNet/SimpleBrowser
+            var browser = new Browser();
+
+            string url = @$"https://finance.yahoo.com/quote/{symbol}/analysis?p={symbol}";
+            browser.Navigate(url);
+            var responseText = browser.Text;
+
+            var pattern = @"targetMeanPrice(\""|:|{|\w|\.)*";
+            Regex rx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            MatchCollection matches = rx.Matches(responseText);
+            var responseExtract = matches.First().Value;
+
+            int lastIdxOfColon = responseExtract.LastIndexOf(":");
+            string targetPrice = responseExtract[(lastIdxOfColon + 1) ..];
+            return Json(new string[] { targetPrice });
         }
     }
 }
