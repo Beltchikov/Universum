@@ -42,20 +42,21 @@ namespace Universum.Controllers
         [HttpGet]
         public ActionResult TargetPrice(string symbol)
         {
+            string url = @$"https://finance.yahoo.com/quote/{symbol}/analysis?p={symbol}";
+            string pattern = @"targetMeanPrice(\""|:|{|\w|\.)*";
+            string pattern2 = @"\d+\.+\d+";
+
             // https://github.com/SimpleBrowserDotNet/SimpleBrowser
             var browser = new Browser();
-
-            string url = @$"https://finance.yahoo.com/quote/{symbol}/analysis?p={symbol}";
             browser.Navigate(url);
             var responseText = browser.Text;
 
-            var pattern = @"targetMeanPrice(\""|:|{|\w|\.)*";
             Regex rx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            MatchCollection matches = rx.Matches(responseText);
-            var responseExtract = matches.First().Value;
+            var responseExtract = rx.Matches(responseText).First().Value;
 
-            int lastIdxOfColon = responseExtract.LastIndexOf(":");
-            string targetPrice = responseExtract[(lastIdxOfColon + 1) ..];
+            rx = new Regex(pattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var targetPrice = rx.Matches(responseExtract).First().Value;
+
             return Json(new string[] { targetPrice });
         }
     }
