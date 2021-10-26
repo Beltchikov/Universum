@@ -44,21 +44,26 @@ namespace Universum.Controllers
         public ActionResult TargetPrice(string symbol)
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}/analysis?p={symbol}";
-            var pattern = @"targetMeanPrice(\""|:|{|\w|\.)*";
+            var pattern1 = @"targetMeanPrice(\""|:|{|\w|\.)*";
             var pattern2 = @"\d+\.+\d+";
 
+            var result = BrowserResult(url, pattern1, pattern2);
+            return Json(new [] { result });
+        }
+
+        private string BrowserResult(string url, string regExPattern1, string regExPattern2)
+        {
             // https://github.com/SimpleBrowserDotNet/SimpleBrowser
             var browser = new Browser();
             browser.Navigate(url);
             var responseText = browser.Text;
 
-            Regex rx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var rx = new Regex(regExPattern1, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var responseExtract = rx.Matches(responseText).First().Value;
 
-            rx = new Regex(pattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var targetPrice = rx.Matches(responseExtract).First().Value;
-
-            return Json(new string[] { targetPrice });
+            rx = new Regex(regExPattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var result = rx.Matches(responseExtract).First().Value;
+            return result;
         }
     }
 }
