@@ -17,11 +17,7 @@ namespace Universum.Controllers
             var url = @$"https://finance.yahoo.com/quote/{symbol}";
             var xPath = "/html/body/div[1]/div/div/div[1]/div/div[2]/div/div/div[5]/div/div/div/div[3]/div[1]/div[1]/span[1]";
 
-            var htmlWeb = new HtmlWeb();
-            var htmlDocument = await Task.Factory.StartNew(() => htmlWeb.Load(url));
-            var nodes = htmlDocument.DocumentNode.SelectNodes(xPath);
-            var result = nodes.Select(n => n.InnerText);
-            
+            var result = await HtmlWebResultAsync(url, xPath);
             return Json(result);
         }
 
@@ -30,13 +26,18 @@ namespace Universum.Controllers
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}/key-statistics";
             var xPath = "/html/body/div[1]/div/div/div[1]/div/div[3]/div[1]/div/div[1]/div/div/section/div[2]/div[3]/div/div[3]/div/div/table/tbody/tr[2]/td[2]";
+            
+            var result = await HtmlWebResultAsync(url, xPath);
+            return Json(result);
+        }
 
+        private async Task<string[]> HtmlWebResultAsync(string url, string xPath)
+        {
             var htmlWeb = new HtmlWeb();
             var htmlDocument = await Task.Factory.StartNew(() => htmlWeb.Load(url));
             var nodes = htmlDocument.DocumentNode.SelectNodes(xPath);
             var result = nodes.Select(n => n.InnerText);
-
-            return Json(result);
+            return result.ToArray();
         }
 
         [HttpGet]
