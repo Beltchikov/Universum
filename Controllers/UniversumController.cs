@@ -55,13 +55,13 @@ namespace Universum.Controllers
         public ActionResult EarningsDate(string symbol)
         {
 
-            // TODO  Why look behind reference does not work?
+            // TODO  Pattern2 is not always needed
             //tsPrevious Close308.13Open311.00Bid310.71 x 1200Ask310.63 x 800Day &#x27;s Range308.60 - 312.3952 Week Range199.62 - 312.39Volume11,332,174Avg. Volume22,281,673Market Cap2.331TBeta (5Y Monthly)0.80PE Ratio (TTM)38.57EPS (TTM)8.05Earnings DateOct 26, 2021Forward Dividend &amp; Yield2.48 (0.80%)Ex-Dividend DateNov 17, 20211y Target Est339.26if (window.performance) {window.performance.mark && window.performance.mark('Col1-0-QuoteSummary');window.performance.measure && window.performance.measure('Col1-0-QuoteSummaryDone','PageStart','Col1-0-QuoteSummary');}if (window.performance) {window.performance.mark && window.performance.mark('Col1-1-Null');
             //Earnings Date.+(\d\w){ 1}
 
             var url = @$"https://finance.yahoo.com/quote/{symbol}?p={symbol}";
-            //var pattern1 = @"Earnings Date.+\dForward";
-            var pattern1 = @"(?<=Earnings Date).*(?=Forward)";
+            // var pattern1 = @"Earnings Date.+?Forward";
+            var pattern1 = @"(?<=Earnings Date).+?(?=Forward)";
 
             var pattern2 = @"\d+\.+\d+";
 
