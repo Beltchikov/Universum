@@ -63,7 +63,7 @@ namespace Universum.Controllers
             // var pattern1 = @"Earnings Date.+?Forward";
             var pattern1 = @"(?<=Earnings Date).+?(?=Forward)";
 
-            var pattern2 = @"\d+\.+\d+";
+            var pattern2 = @"";
 
             var result = BrowserResult(url, pattern1, pattern2);
             return Json(new[] { result });
@@ -77,11 +77,17 @@ namespace Universum.Controllers
             var responseText = browser.Text;
 
             var rx = new Regex(regExPattern1, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var responseExtract = rx.Matches(responseText).First().Value;
+            var regExResult1 = rx.Matches(responseText).First().Value;
+
+            if (string.IsNullOrWhiteSpace(regExPattern2))
+            {
+                return regExResult1;
+            }
 
             rx = new Regex(regExPattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var result = rx.Matches(responseExtract).First().Value;
-            return result;
+            var regExResult2 = rx.Matches(regExResult1).First().Value;
+            
+            return regExResult2;
         }
     }
 }
