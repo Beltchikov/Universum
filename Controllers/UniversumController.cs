@@ -26,7 +26,7 @@ namespace Universum.Controllers
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}/key-statistics";
             var xPath = "/html/body/div[1]/div/div/div[1]/div/div[3]/div[1]/div/div[1]/div/div/section/div[2]/div[3]/div/div[3]/div/div/table/tbody/tr[2]/td[2]";
-            
+
             var result = await HtmlWebResultAsync(url, xPath);
             return Json(result);
         }
@@ -48,25 +48,31 @@ namespace Universum.Controllers
             var pattern2 = @"\d+\.+\d+";
 
             var result = BrowserResult(url, pattern1, pattern2);
-            return Json(new [] { result });
+            return Json(new[] { result });
         }
 
         [HttpGet]
         public ActionResult EarningsDate(string symbol)
         {
 
-            // TODO  Pattern2 is not always needed
-            //tsPrevious Close308.13Open311.00Bid310.71 x 1200Ask310.63 x 800Day &#x27;s Range308.60 - 312.3952 Week Range199.62 - 312.39Volume11,332,174Avg. Volume22,281,673Market Cap2.331TBeta (5Y Monthly)0.80PE Ratio (TTM)38.57EPS (TTM)8.05Earnings DateOct 26, 2021Forward Dividend &amp; Yield2.48 (0.80%)Ex-Dividend DateNov 17, 20211y Target Est339.26if (window.performance) {window.performance.mark && window.performance.mark('Col1-0-QuoteSummary');window.performance.measure && window.performance.measure('Col1-0-QuoteSummaryDone','PageStart','Col1-0-QuoteSummary');}if (window.performance) {window.performance.mark && window.performance.mark('Col1-1-Null');
-            //Earnings Date.+(\d\w){ 1}
-
             var url = @$"https://finance.yahoo.com/quote/{symbol}?p={symbol}";
-            // var pattern1 = @"Earnings Date.+?Forward";
             var pattern1 = @"(?<=Earnings Date).+?(?=Forward)";
-
             var pattern2 = @"";
 
             var result = BrowserResult(url, pattern1, pattern2);
             return Json(new[] { result });
+        }
+
+        [HttpGet]
+        public ActionResult LastEquity(string symbol)
+        {
+            var url = @$"https://finance.yahoo.com/quote/{symbol}/balance-sheet?p={symbol}";
+            var pattern1 = @"(?<=""totalStockholderEquity"":{""raw"":)\d+";
+            var pattern2 = @"";
+
+            var result = BrowserResult(url, pattern1, pattern2);
+            var valueInMillions = System.Convert.ToInt64(result) / 1000000;
+            return Json(new[] { valueInMillions });
         }
 
         private string BrowserResult(string url, string regExPattern1, string regExPattern2)
@@ -86,7 +92,7 @@ namespace Universum.Controllers
 
             rx = new Regex(regExPattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var regExResult2 = rx.Matches(regExResult1).First().Value;
-            
+
             return regExResult2;
         }
     }
