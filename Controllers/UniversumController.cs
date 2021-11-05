@@ -75,6 +75,17 @@ namespace Universum.Controllers
             return Json(new[] { valueInMillions });
         }
 
+        [HttpGet]
+        public ActionResult SharesDiluted(string symbol)
+        {
+            var url = @$"https://finance.yahoo.com/quote/{symbol}/financials?p={symbol}";
+            var pattern1 = @"(?<=Diluted Average Shares-)\d+,\d{3}";
+            var pattern2 = @"";
+
+            var result = BrowserResult(url, pattern1, pattern2);
+            return Json(new[] { result });
+        }
+
         private string BrowserResult(string url, string regExPattern1, string regExPattern2)
         {
             // https://github.com/SimpleBrowserDotNet/SimpleBrowser
