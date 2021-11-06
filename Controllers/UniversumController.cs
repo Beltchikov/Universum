@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleBrowser;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -81,14 +82,25 @@ namespace Universum.Controllers
         }
 
         [HttpGet]
-        public ActionResult SharesDiluted(string symbol)
+        public ActionResult SharesOutstanding(string symbol)
         {
-            var url = @$"https://finance.yahoo.com/quote/{symbol}/financials?p={symbol}";
-            var pattern1 = @"(?<=Diluted Average Shares-)\d+,\d{3}";
+            var url = @$"https://finance.yahoo.com/quote/{symbol}/key-statistics?p={symbol}";
+            var pattern1 = @"(?<=Shares Outstanding)\s*\d+\.\d+.";
             var pattern2 = @"";
 
             var result = BrowserResult(url, pattern1, pattern2);
-            return Json(new[] { result });
+            var unit = result[^1..];
+            var value = result[..^1];
+            double valueDouble = Convert.ToDouble(value.Trim(), new CultureInfo("EN-us"));
+
+            valueDouble = unit switch
+            {
+                "B" => valueDouble * 1000,
+                "M" => valueDouble ,
+                _ => throw new ApplicationException($"Unknown unit {unit}")
+            };
+
+            return Json(new[] { valueDouble });
         }
 
         private string BrowserResult(string url, string regExPattern1, string regExPattern2)
