@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBrowser;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -71,8 +72,12 @@ namespace Universum.Controllers
             var pattern2 = @"";
 
             var result = BrowserResult(url, pattern1, pattern2);
-            var valueInMillions = System.Convert.ToInt64(result) / 1000000;
-            return Json(new[] { valueInMillions });
+            
+            result = result.Replace(",", "");
+            double doubleResult = Convert.ToDouble(result) / 1000000;
+            doubleResult = Math.Round(doubleResult, 2);
+
+            return Json(new[] { doubleResult });
         }
 
         [HttpGet]
