@@ -85,13 +85,13 @@ namespace Universum.Controllers
         public ActionResult SharesOutstanding(string symbol)
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}/key-statistics?p={symbol}";
-            var pattern1 = @"(?<=Shares Outstanding)\s*\d+\.\d+.";
+            var pattern1 = @"(?<=Shares Outstanding\s*\d)\d+\.\d+.";
             var pattern2 = @"";
 
             var result = BrowserResult(url, pattern1, pattern2);
             var unit = result[^1..];
             var value = result[..^1];
-            double valueDouble = Convert.ToDouble(value.Trim(), new CultureInfo("EN-us"));
+            double valueDouble = Convert.ToDouble(value, new CultureInfo("EN-us"));
 
             valueDouble = unit switch
             {
