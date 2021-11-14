@@ -4,7 +4,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Universum.Controllers
 {
@@ -13,7 +12,7 @@ namespace Universum.Controllers
     public class UniversumController : Controller
     {
         [HttpGet]
-        public async Task<ActionResult> CurrentPrice(string symbol)
+        public ActionResult CurrentPrice(string symbol)
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}";
             var pattern1 = @"(?<=""currentPrice"":{""raw"":)(\d|\.)+";
@@ -24,7 +23,7 @@ namespace Universum.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Roe(string symbol)
+        public ActionResult Roe(string symbol)
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}";
             var pattern1 = @"(?<=""returnOnEquity"":{""raw"":)(\d|\.)+";
