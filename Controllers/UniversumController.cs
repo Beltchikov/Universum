@@ -27,11 +27,15 @@ namespace Universum.Controllers
         [HttpGet]
         public async Task<ActionResult> Roe(string symbol)
         {
-            var url = @$"https://finance.yahoo.com/quote/{symbol}/key-statistics";
-            var xPath = "/html/body/div[1]/div/div/div[1]/div/div[3]/div[1]/div/div[1]/div/div/section/div[2]/div[3]/div/div[3]/div/div/table/tbody/tr[2]/td[2]";
+            var url = @$"https://finance.yahoo.com/quote/{symbol}";
+            var pattern1 = @"(?<=""returnOnEquity"":{""raw"":)(\d|\.)+";
+            var pattern2 = @"";
 
-            var result = await HtmlWebResultAsync(url, xPath);
-            return Json(result);
+            var result = BrowserResult(url, pattern1, pattern2);
+            double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) * 100;
+            doubleResult = Math.Round(doubleResult, 0);
+
+            return Json(new[] { doubleResult });
         }
 
         private async Task<string[]> HtmlWebResultAsync(string url, string xPath)
@@ -76,7 +80,7 @@ namespace Universum.Controllers
             var result = BrowserResult(url, pattern1, pattern2);
             
             result = result.Replace(",", "");
-            double doubleResult = Convert.ToDouble(result) / 1000000;
+            double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) / 1000000;
             doubleResult = Math.Round(doubleResult, 2);
 
             return Json(new[] { doubleResult });
