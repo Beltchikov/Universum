@@ -1,5 +1,4 @@
-﻿using HtmlAgilityPack;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SimpleBrowser;
 using System;
 using System.Globalization;
@@ -36,15 +35,6 @@ namespace Universum.Controllers
             doubleResult = Math.Round(doubleResult, 0);
 
             return Json(new[] { doubleResult });
-        }
-
-        private async Task<string[]> HtmlWebResultAsync(string url, string xPath)
-        {
-            var htmlWeb = new HtmlWeb();
-            var htmlDocument = await Task.Factory.StartNew(() => htmlWeb.Load(url));
-            var nodes = htmlDocument.DocumentNode.SelectNodes(xPath);
-            var result = nodes.Select(n => n.InnerText);
-            return result.ToArray();
         }
 
         [HttpGet]
