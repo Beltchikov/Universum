@@ -1,7 +1,9 @@
-﻿using SimpleBrowser;
+﻿using System.Diagnostics.CodeAnalysis;
+using SimpleBrowser;
 
 namespace Universum.Models
 {
+    [ExcludeFromCodeCoverage]
     public class BrowserWrapper : IBrowserWrapper
     {
         private Browser _browser;
