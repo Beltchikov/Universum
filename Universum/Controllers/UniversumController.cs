@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SimpleBrowser;
 using System;
 using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
+using Universum.Models;
 
 namespace Universum.Controllers
 {
@@ -11,6 +9,13 @@ namespace Universum.Controllers
     [Route("[controller]/[action]")]
     public class UniversumController : Controller
     {
+        private readonly ISimpleBrowser _simpleBrowser;
+        
+        public UniversumController(ISimpleBrowser simpleBrowser)
+        {
+            _simpleBrowser = simpleBrowser;
+        }
+        
         [HttpGet]
         public ActionResult CurrentPrice(string symbol)
         {
@@ -18,7 +23,7 @@ namespace Universum.Controllers
             var pattern1 = @"(?<=""currentPrice"":{""raw"":)(\d|\.)+";
             var pattern2 = @"";
 
-            var result = BrowserResult(url, pattern1, pattern2);
+            var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             return Json(new[] { result });
         }
 
@@ -29,7 +34,7 @@ namespace Universum.Controllers
             var pattern1 = @"(?<=""returnOnEquity"":{""raw"":)(\d|\.)+";
             var pattern2 = @"";
 
-            var result = BrowserResult(url, pattern1, pattern2);
+            var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) * 100;
             doubleResult = Math.Round(doubleResult, 0);
 
@@ -43,7 +48,7 @@ namespace Universum.Controllers
             var pattern1 = @"targetMeanPrice(\""|:|{|\w|\.)*";
             var pattern2 = @"\d+\.+\d+";
 
-            var result = BrowserResult(url, pattern1, pattern2);
+            var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             return Json(new[] { result });
         }
 
@@ -55,7 +60,7 @@ namespace Universum.Controllers
             var pattern1 = @"(?<=Earnings Date).+?(?=Forward)";
             var pattern2 = @"";
 
-            var result = BrowserResult(url, pattern1, pattern2);
+            var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             return Json(new[] { result });
         }
 
@@ -66,7 +71,7 @@ namespace Universum.Controllers
             var pattern1 = @"(?<=""totalStockholderEquity"":{""raw"":)\d+";
             var pattern2 = @"";
 
-            var result = BrowserResult(url, pattern1, pattern2);
+            string result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             
             result = result.Replace(",", "");
             double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) / 1000000;
@@ -82,9 +87,9 @@ namespace Universum.Controllers
             var pattern1 = @"(?<=Shares Outstanding\s*\d)\d+\.?\d+.";
             var pattern2 = @"";
 
-            var result = BrowserResult(url, pattern1, pattern2);
+            var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             var unit = result[^1..];
-            var value = result[..^1];
+            string value = result[..^1];
             double valueDouble = Convert.ToDouble(value, new CultureInfo("EN-us"));
 
             valueDouble = unit switch
@@ -95,27 +100,6 @@ namespace Universum.Controllers
             };
 
             return Json(new[] { valueDouble });
-        }
-
-        private string BrowserResult(string url, string regExPattern1, string regExPattern2)
-        {
-            // https://github.com/SimpleBrowserDotNet/SimpleBrowser
-            var browser = new Browser();
-            browser.Navigate(url);
-            var responseText = browser.Text;
-
-            var rx = new Regex(regExPattern1, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var regExResult1 = rx.Matches(responseText).First().Value;
-
-            if (string.IsNullOrWhiteSpace(regExPattern2))
-            {
-                return regExResult1;
-            }
-
-            rx = new Regex(regExPattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var regExResult2 = rx.Matches(regExResult1).First().Value;
-
-            return regExResult2;
         }
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Universum.Models;
 
 
 namespace Universum
@@ -32,6 +33,8 @@ namespace Universum
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
+
+            services.AddSingleton<ISimpleBrowser>(p => new Models.SimpleBrowser());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
