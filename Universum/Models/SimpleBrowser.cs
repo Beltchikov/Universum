@@ -20,21 +20,27 @@ namespace Universum.Models
             var responseText = _browserWrapper.Text;
 
             var rx = new Regex(regExPattern1, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var regExResult1 = rx.Matches(responseText).First().Value;
 
+            var matchCollection1 = rx.Matches(responseText).ToList();
+            if (!matchCollection1.Any())
+            {
+                return string.Empty;
+            }
+            var regExResult1 = matchCollection1.First().Value;
+           
             if (string.IsNullOrWhiteSpace(regExPattern2))
             {
                 return regExResult1;
             }
 
             rx = new Regex(regExPattern2, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var matchCollection = rx.Matches(regExResult1).ToList();
-            if (!matchCollection.Any())
+            var matchCollection2 = rx.Matches(regExResult1).ToList();
+            if (!matchCollection2.Any())
             {
                 return string.Empty;
             }
 
-            return matchCollection.First().Value;
+            return matchCollection2.First().Value;
         }
     }
 }
