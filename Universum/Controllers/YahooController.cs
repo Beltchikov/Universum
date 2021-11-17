@@ -7,11 +7,11 @@ namespace Universum.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class UniversumController : Controller
+    public class YahooController : Controller
     {
         private readonly ISimpleBrowser _simpleBrowser;
         
-        public UniversumController(ISimpleBrowser simpleBrowser)
+        public YahooController(ISimpleBrowser simpleBrowser)
         {
             _simpleBrowser = simpleBrowser;
         }

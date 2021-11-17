@@ -2,7 +2,7 @@ using Xunit;
 
 namespace Universum.Tests
 {
-    public class UniversumController
+    public class YahooController
     {
         [Fact]
         public void Test1()
