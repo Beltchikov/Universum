@@ -1,3 +1,4 @@
+using System;
 using AutoFixture.Xunit2;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
@@ -11,7 +12,7 @@ namespace Universum.Tests
     public class YahooControllerShould
     {
         [Fact]
-        public void ReturnCurrentPrice()
+        public void ReturnsCurrentPrice()
         {
             var currentPriceExpected = "132.45";
 
@@ -31,7 +32,7 @@ namespace Universum.Tests
         }
 
         [Fact]
-        public void ReturnRoe()
+        public void ReturnsRoe()
         {
             double roeExpected = 32;
             var roeReceived= "0.324";
@@ -52,7 +53,7 @@ namespace Universum.Tests
         }
 
         [Fact]
-        public void ReturnTargetPrice()
+        public void ReturnsTargetPrice()
         {
             string targetPriceExpected = "45.78";
 
@@ -69,6 +70,106 @@ namespace Universum.Tests
             var targetPrice = targetPriceArray[0];
 
             Assert.Equal(targetPriceExpected, targetPrice);
+        }
+
+        [Fact]
+        public void ReturnsEarningsDate()
+        {
+            string earningsDateExpected = "Jan 05, 2022 - Jan 10, 2022";
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(earningsDateExpected);
+
+            var sut = new YahooController(simpleBrowser);
+            JsonResult jsonResult = (JsonResult)sut.EarningsDate("MSFT");
+            string[] earningsDateArray = (string[])jsonResult.Value;
+            var earningsDate = earningsDateArray[0];
+
+            Assert.Equal(earningsDateExpected, earningsDate);
+        }
+
+        [Fact]
+        public void ReturnsLastEquity()
+        {
+            string lastEquityReceived= "133360000000";
+            double lastEquityExpected = 133360;
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(lastEquityReceived);
+
+            var sut = new YahooController(simpleBrowser);
+            JsonResult jsonResult = (JsonResult)sut.LastEquity("FB");
+            double[] lastEquityArray = (double[])jsonResult.Value;
+            var lastEquity = lastEquityArray[0];
+
+            Assert.Equal(lastEquityExpected, lastEquity);
+        }
+
+        [Fact]
+        public void ReturnsSharesOutstandingInMillions()
+        {
+            string sharesOutstandingReceived = "7.24M";
+            double sharesOutstandingExpected = 7.24;
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(sharesOutstandingReceived);
+
+            var sut = new YahooController(simpleBrowser);
+            JsonResult jsonResult = (JsonResult)sut.SharesOutstanding("ESEA");
+            double[] sharesOutstandingArray = (double[])jsonResult.Value;
+            var sharesOutstanding = sharesOutstandingArray[0];
+
+            Assert.Equal(sharesOutstandingExpected, sharesOutstanding);
+        }
+
+        [Fact]
+        public void ReturnsSharesOutstandingInBillions()
+        {
+            string sharesOutstandingReceived = "2.79B";
+            double sharesOutstandingExpected = 2790;
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(sharesOutstandingReceived);
+
+            var sut = new YahooController(simpleBrowser);
+            JsonResult jsonResult = (JsonResult)sut.SharesOutstanding("ESEA");
+            double[] sharesOutstandingArray = (double[])jsonResult.Value;
+            var sharesOutstanding = sharesOutstandingArray[0];
+
+            Assert.Equal(sharesOutstandingExpected, sharesOutstanding);
+        }
+
+        [Fact]
+        public void ThrowExceptionInSharesOutstanding()
+        {
+            string sharesOutstandingReceived = "2.79";
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(sharesOutstandingReceived);
+
+            var sut = new YahooController(simpleBrowser);
+
+            Assert.Throws<ApplicationException>(() => sut.SharesOutstanding("SOME"));
         }
     }
 }

@@ -55,7 +55,6 @@ namespace Universum.Controllers
         [HttpGet]
         public ActionResult EarningsDate(string symbol)
         {
-
             var url = @$"https://finance.yahoo.com/quote/{symbol}?p={symbol}";
             var pattern1 = @"(?<=Earnings Date).+?(?=Forward)";
             var pattern2 = @"";
