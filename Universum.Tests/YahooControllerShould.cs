@@ -63,11 +63,13 @@ namespace Universum.Tests
                     Arg.Any<string>(),
                     Arg.Any<string>())
                 .Returns(roeReceived);
+            var yahooConverter = Substitute.For<IYahooConverter>();
 
-            var sut = new YahooController(simpleBrowser, new YahooConverter());
+            var sut = new YahooController(simpleBrowser, yahooConverter);
             JsonResult jsonResult = (JsonResult)sut.Roe("MSFT");
 
-            simpleBrowser.Received(2).OneValueResult(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            simpleBrowser.Received(3).OneValueResult(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            yahooConverter.Received(2).RemoveCommaivideBy1000000Round2(Arg.Any<string>());
         }
 
             [Fact]

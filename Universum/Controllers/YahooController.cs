@@ -34,17 +34,22 @@ namespace Universum.Controllers
         {
             var url = @$"https://finance.yahoo.com/quote/{symbol}";
             var pattern1 = @"(?<=""returnOnEquity"":{""raw"":)(\d|\.)+";
-            var pattern2 = @"";
-
-            var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+            
+            var result = _simpleBrowser.OneValueResult(url, pattern1);
             if(string.IsNullOrWhiteSpace(result))
             {
                 url = @$"https://finance.yahoo.com/quote/{symbol}/balance-sheet?p={symbol}";
                 pattern1 = @"(?<=""totalStockholderEquity"":{""raw"":)\d+";
-                pattern2 = @"";
-                var equityResult = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+                var equityResult = _simpleBrowser.OneValueResult(url, pattern1);
+                double equity = _yahooConverter.RemoveCommaivideBy1000000Round2(equityResult);
 
-                return null;
+                url = @$"https://finance.yahoo.com/quote/{symbol}/financials?p={symbol}";
+                pattern1 = @"(?<=\""minorityInterest\"":\{.+\},\""netIncome\"":{""raw"":)\d+";
+                var lastIncomeResult = _simpleBrowser.OneValueResult(url, pattern1);
+                double lastIncome = _yahooConverter.RemoveCommaivideBy1000000Round2(lastIncomeResult);
+
+                double roe = _yahooConverter.Roe(lastIncome, equity);
+                return Json(new[] { roe });
             }
 
             double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) * 100;
@@ -83,7 +88,7 @@ namespace Universum.Controllers
             var pattern2 = @"";
 
             string result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
-            double doubleResult = _yahooConverter.ConvertLastEquity(result);
+            double doubleResult = _yahooConverter.RemoveCommaivideBy1000000Round2(result);
             
             return Json(new[] { doubleResult });
         }
