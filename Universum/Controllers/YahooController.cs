@@ -10,12 +10,14 @@ namespace Universum.Controllers
     public class YahooController : Controller
     {
         private readonly ISimpleBrowser _simpleBrowser;
-        
-        public YahooController(ISimpleBrowser simpleBrowser)
+        private readonly IYahooConverter _yahooConverter;
+
+        public YahooController(ISimpleBrowser simpleBrowser, IYahooConverter yahooConverter)
         {
             _simpleBrowser = simpleBrowser;
+            _yahooConverter = yahooConverter;
         }
-        
+
         [HttpGet]
         public ActionResult CurrentPrice(string symbol)
         {
@@ -35,6 +37,16 @@ namespace Universum.Controllers
             var pattern2 = @"";
 
             var result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+            if(string.IsNullOrWhiteSpace(result))
+            {
+                url = @$"https://finance.yahoo.com/quote/{symbol}/balance-sheet?p={symbol}";
+                pattern1 = @"(?<=""totalStockholderEquity"":{""raw"":)\d+";
+                pattern2 = @"";
+                var equityResult = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+
+                return null;
+            }
+
             double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) * 100;
             doubleResult = Math.Round(doubleResult, 0);
 
@@ -71,11 +83,8 @@ namespace Universum.Controllers
             var pattern2 = @"";
 
             string result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+            double doubleResult = _yahooConverter.ConvertLastEquity(result);
             
-            result = result.Replace(",", "");
-            double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) / 1000000;
-            doubleResult = Math.Round(doubleResult, 2);
-
             return Json(new[] { doubleResult });
         }
 

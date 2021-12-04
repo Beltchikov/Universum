@@ -23,7 +23,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(currentPriceExpected);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.CurrentPrice("MSFT");
             string[] currentPriceArray = (string[])jsonResult.Value;
             var currentPrice = currentPriceArray[0];
@@ -44,7 +44,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(roeReceived);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.Roe("MSFT");
             double[] roeArray = (double[])jsonResult.Value;
             var roe = roeArray[0];
@@ -53,6 +53,24 @@ namespace Universum.Tests
         }
 
         [Fact]
+        public void CallLastEquityIfRoeStringIsEmpty()
+        {
+            var roeReceived = "";
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(roeReceived);
+
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
+            JsonResult jsonResult = (JsonResult)sut.Roe("MSFT");
+
+            simpleBrowser.Received(2).OneValueResult(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        }
+
+            [Fact]
         public void ReturnsTargetPrice()
         {
             string targetPriceExpected = "45.78";
@@ -64,7 +82,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(targetPriceExpected);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.CurrentPrice("MSFT");
             string[] targetPriceArray = (string[])jsonResult.Value;
             var targetPrice = targetPriceArray[0];
@@ -84,7 +102,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(earningsDateExpected);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.EarningsDate("MSFT");
             string[] earningsDateArray = (string[])jsonResult.Value;
             var earningsDate = earningsDateArray[0];
@@ -105,7 +123,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(lastEquityReceived);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.LastEquity("FB");
             double[] lastEquityArray = (double[])jsonResult.Value;
             var lastEquity = lastEquityArray[0];
@@ -126,7 +144,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(sharesOutstandingReceived);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.SharesOutstanding("ESEA");
             double[] sharesOutstandingArray = (double[])jsonResult.Value;
             var sharesOutstanding = sharesOutstandingArray[0];
@@ -147,7 +165,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(sharesOutstandingReceived);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.SharesOutstanding("ESEA");
             double[] sharesOutstandingArray = (double[])jsonResult.Value;
             var sharesOutstanding = sharesOutstandingArray[0];
@@ -167,7 +185,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(sharesOutstandingReceived);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
 
             Assert.Throws<ApplicationException>(() => sut.SharesOutstanding("SOME"));
         }
@@ -185,7 +203,7 @@ namespace Universum.Tests
                     Arg.Any<string>())
                 .Returns(lastIncomeReceived);
 
-            var sut = new YahooController(simpleBrowser);
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.LastIncome("FB");
             double[] lastIncomeArray = (double[])jsonResult.Value;
             var lastIncome= lastIncomeArray[0];

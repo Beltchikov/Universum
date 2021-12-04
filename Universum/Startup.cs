@@ -36,6 +36,7 @@ namespace Universum
 
             services.AddSingleton<IBrowserWrapper>(p => new BrowserWrapper());
             services.AddSingleton<ISimpleBrowser>(p => new Models.SimpleBrowser(p.GetRequiredService<IBrowserWrapper>()));
+            services.AddSingleton<IYahooConverter>(p => new YahooConverter());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
