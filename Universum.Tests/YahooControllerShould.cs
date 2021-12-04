@@ -171,5 +171,26 @@ namespace Universum.Tests
 
             Assert.Throws<ApplicationException>(() => sut.SharesOutstanding("SOME"));
         }
+
+        [Fact]
+        public void ReturnLastIncome()
+        {
+            string lastIncomeReceived = "133360000000";
+            double lastIncomeExpected = 133360;
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(lastIncomeReceived);
+
+            var sut = new YahooController(simpleBrowser);
+            JsonResult jsonResult = (JsonResult)sut.LastIncome("FB");
+            double[] lastIncomeArray = (double[])jsonResult.Value;
+            var lastIncome= lastIncomeArray[0];
+
+            Assert.Equal(lastIncomeExpected, lastIncome);
+        }
     }
 }
