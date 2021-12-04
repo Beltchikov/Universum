@@ -32,10 +32,10 @@ namespace Universum.Tests
         }
 
         [Fact]
-        public void ReturnsRoe()
+        public void ConvertRoeStringToDoubleAndMultiplyBy100()
         {
             double roeExpected = 32;
-            var roeReceived= "0.324";
+            var roeReceived = "0.324";
 
             var simpleBrowser = Substitute.For<ISimpleBrowser>();
             simpleBrowser.OneValueResult(
