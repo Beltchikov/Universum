@@ -192,6 +192,7 @@ namespace Universum.Tests
             Assert.Throws<ApplicationException>(() => sut.SharesOutstanding("SOME"));
         }
 
+
         [Fact]
         public void ReturnLastIncome()
         {
@@ -211,6 +212,23 @@ namespace Universum.Tests
             var lastIncome= lastIncomeArray[0];
 
             Assert.Equal(lastIncomeExpected, lastIncome);
+        }
+
+        [Fact]
+        public void CallOneValueResult()
+        {
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            //simpleBrowser.OneValueResult(
+            //        Arg.Any<string>(),
+            //        Arg.Any<string>(),
+            //        Arg.Any<string>())
+            //    .Returns(roeReceived);
+            var yahooConverter = Substitute.For<IYahooConverter>();
+
+            var sut = new YahooController(simpleBrowser, yahooConverter);
+            JsonResult jsonResult = (JsonResult)sut.CompanyName("MSFT");
+
+            simpleBrowser.Received().OneValueResult(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
         }
     }
 }

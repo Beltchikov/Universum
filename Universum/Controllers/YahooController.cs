@@ -130,5 +130,16 @@ namespace Universum.Controllers
 
             return Json(new[] { doubleResult });
         }
+
+        [HttpGet]
+        public ActionResult CompanyName(string symbol)
+        {
+            var url = @$"https://finance.yahoo.com/quote/{symbol}";
+            var pattern1 = @"(?<=""pageData"":{""title"":"").+?(?=,)";
+            var pattern2 = @"";
+
+            string result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+            return Json(new[] { result });
+        }
     }
 }
