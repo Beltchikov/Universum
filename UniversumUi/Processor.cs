@@ -24,9 +24,18 @@ namespace UniversumUi
             {
                 try
                 {
-                    var uri = $"{apiUrl}/CurrentPrice?symbol={symbol}";
-                    string responseBody = await _httpClient.GetStringAsync(uri);
-                    MessageEvent?.Invoke(this, new MessageEventArgs(responseBody));
+                    // TODO Roe
+
+                    // LastEquity
+
+                    // TargetPrice
+
+                    var uriCurrentPrice = $"{apiUrl}/CurrentPrice?symbol={symbol}";
+                    string responseCurrentPrice = await _httpClient.GetStringAsync(uriCurrentPrice);
+
+                    // SharesOutstanding
+
+                    MessageEvent?.Invoke(this, new MessageEventArgs(responseCurrentPrice));
                 }
                 catch (Exception e)
                 {
