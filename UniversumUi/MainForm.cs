@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace UniversumUi
@@ -18,13 +11,20 @@ namespace UniversumUi
         public MainForm(IProcessor processor)
         {
             InitializeComponent();
-            _processor = processor as Processor;
 
-            _processor.MessageEvent += _processor_MessageEvent;
-
+            if(processor is Processor processorNullSafe)
+            {
+                _processor = processorNullSafe;
+                _processor.MessageEvent += _processor_MessageEvent;
+            }
+            else
+            {
+                throw new ApplicationException("Unexpected: _processor is null ");
+            }
+            
             // Test data
             var testData = "OKE\r\nSNCY\r\nCSX\r\nNS";
-            txtSymbols.Text=testData;
+            txtSymbols.Text = testData;
         }
 
         private void _processor_MessageEvent(object sender, MessageEventArgs e)
@@ -40,14 +40,11 @@ namespace UniversumUi
         private void btGo_Click(object sender, EventArgs e)
         {
             var symbolsAsText = txtSymbols.Text;
-            var apiUrl = txtHost.Text;    
+            var apiUrl = txtHost.Text;
 
-            // Start input thread
             new Thread(async () => await _processor.ProcessAsync(apiUrl, symbolsAsText))
             { IsBackground = true }
             .Start();
-
-
         }
     }
 }
