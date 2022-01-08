@@ -17,7 +17,10 @@ namespace UniversumUi
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            
+            var processor = new Processor();
+            
+            Application.Run(new MainForm(processor));
         }
     }
 }

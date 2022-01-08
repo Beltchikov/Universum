@@ -12,14 +12,17 @@ namespace UniversumUi
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        private IProcessor _processor;
+
+        public MainForm(IProcessor processor)
         {
             InitializeComponent();
+            _processor = processor;
         }
 
         private void btGo_Click(object sender, EventArgs e)
         {
-
+            _processor.Process(txtSymbols.Text);
         }
     }
 }

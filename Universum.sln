@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Universum.Tests", "Universu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversumUi", "UniversumUi\UniversumUi.csproj", "{9BFA92D8-390F-43F4-99E4-66206701C9FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversumUi.Tests", "UniversumUi.Tests\UniversumUi.Tests.csproj", "{2D4C71FE-38E8-44D4-93D7-FC45BB1931A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9BFA92D8-390F-43F4-99E4-66206701C9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BFA92D8-390F-43F4-99E4-66206701C9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BFA92D8-390F-43F4-99E4-66206701C9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D4C71FE-38E8-44D4-93D7-FC45BB1931A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D4C71FE-38E8-44D4-93D7-FC45BB1931A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D4C71FE-38E8-44D4-93D7-FC45BB1931A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D4C71FE-38E8-44D4-93D7-FC45BB1931A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
