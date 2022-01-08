@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -8,9 +9,8 @@ namespace UniversumUi
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        static readonly HttpClient httpClient = new HttpClient();
+
         [STAThread]
         static void Main()
         {
@@ -18,7 +18,7 @@ namespace UniversumUi
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            var processor = new Processor();
+            var processor = new Processor(httpClient);
             
             Application.Run(new MainForm(processor));
         }

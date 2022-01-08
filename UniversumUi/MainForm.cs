@@ -21,6 +21,10 @@ namespace UniversumUi
             _processor = processor as Processor;
 
             _processor.MessageEvent += _processor_MessageEvent;
+
+            // Test data
+            var testData = "OKE\r\nSNCY\r\nCSX\r\nNS";
+            txtSymbols.Text=testData;
         }
 
         private void _processor_MessageEvent(object sender, MessageEventArgs e)
@@ -38,7 +42,7 @@ namespace UniversumUi
             var symbolsAsText = txtSymbols.Text;
 
             // Start input thread
-            new Thread(() => _processor.Process(symbolsAsText))
+            new Thread(() => _processor.ProcessAsync(symbolsAsText))
             { IsBackground = true }
             .Start();
 

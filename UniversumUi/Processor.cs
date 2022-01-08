@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,21 +7,53 @@ namespace UniversumUi
 {
     public class Processor : IProcessor
     {
+        private HttpClient _httpClient;
+
+        public Processor(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         public delegate void MessageEventHandler(object sender, MessageEventArgs e);
 
         public event MessageEventHandler MessageEvent;
 
-        public void Process(string text)
+        public async Task ProcessAsync(string text)
         {
-            MessageEvent?.Invoke(this, new MessageEventArgs("Processing started"));
+            var symbolList = text.Split(Environment.NewLine);
+            foreach (var symbol in symbolList)
+            {
+                try
+                {
+                    //HttpResponseMessage response = await _httpClient.GetAsync("http://www.contoso.com/");
+                    //response.EnsureSuccessStatusCode();
+                    //string responseBody = await response.Content.ReadAsStringAsync();
 
-            Thread.Sleep(10000);
+                    var uri = "http://localhost:1967/Yahoo/CurrentPrice?symbol=goog";
+                    string responseBody = await _httpClient.GetStringAsync(uri);
+                    MessageEvent?.Invoke(this, new MessageEventArgs(responseBody));
+                    // Above three lines can be replaced with new helper method below
+                    // string responseBody = await client.GetStringAsync(uri);
 
-            MessageEvent?.Invoke(this, new MessageEventArgs("Message 1"));
+                    Console.WriteLine(responseBody);
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine("\nException Caught!");
+                    Console.WriteLine("Message :{0} ", e.Message);
+                }
+            }
+            
+            //MessageEvent?.Invoke(this, new MessageEventArgs("Processing started"));
 
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
 
-            MessageEvent?.Invoke(this, new MessageEventArgs("Message 2"));
+            //MessageEvent?.Invoke(this, new MessageEventArgs("Message 1"));
+
+            //Thread.Sleep(10000);
+
+            //MessageEvent?.Invoke(this, new MessageEventArgs("Message 2"));
         }
+
     }
 }
