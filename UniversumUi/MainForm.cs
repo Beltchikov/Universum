@@ -40,9 +40,10 @@ namespace UniversumUi
         private void btGo_Click(object sender, EventArgs e)
         {
             var symbolsAsText = txtSymbols.Text;
+            var apiUrl = txtHost.Text;    
 
             // Start input thread
-            new Thread(() => _processor.ProcessAsync(symbolsAsText))
+            new Thread(async () => await _processor.ProcessAsync(apiUrl, symbolsAsText))
             { IsBackground = true }
             .Start();
 

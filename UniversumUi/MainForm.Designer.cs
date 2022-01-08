@@ -31,6 +31,7 @@
             this.txtSymbols = new System.Windows.Forms.TextBox();
             this.txtResults = new System.Windows.Forms.TextBox();
             this.btGo = new System.Windows.Forms.Button();
+            this.txtHost = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtSymbols
@@ -61,11 +62,20 @@
             this.btGo.UseVisualStyleBackColor = true;
             this.btGo.Click += new System.EventHandler(this.btGo_Click);
             // 
+            // txtHost
+            // 
+            this.txtHost.Location = new System.Drawing.Point(22, 12);
+            this.txtHost.Name = "txtHost";
+            this.txtHost.Size = new System.Drawing.Size(293, 23);
+            this.txtHost.TabIndex = 3;
+            this.txtHost.Text = "http://localhost:1967/Yahoo";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1225, 773);
+            this.Controls.Add(this.txtHost);
             this.Controls.Add(this.btGo);
             this.Controls.Add(this.txtResults);
             this.Controls.Add(this.txtSymbols);
@@ -81,5 +91,6 @@
         private System.Windows.Forms.TextBox txtSymbols;
         private System.Windows.Forms.TextBox txtResults;
         private System.Windows.Forms.Button btGo;
+        private System.Windows.Forms.TextBox txtHost;
     }
 }

@@ -4,7 +4,7 @@ namespace UniversumUi
 {
     public interface IProcessor
     {
-        Task ProcessAsync(string text);
+        Task ProcessAsync(string apiUrl, string symbolsAsString);
         
         delegate void MessageEventHandler(object sender, MessageEventArgs e);
     }

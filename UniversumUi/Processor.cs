@@ -18,9 +18,9 @@ namespace UniversumUi
 
         public event MessageEventHandler MessageEvent;
 
-        public async Task ProcessAsync(string text)
+        public async Task ProcessAsync(string apiUrl, string symbolsAsText)
         {
-            var symbolList = text.Split(Environment.NewLine);
+            var symbolList = symbolsAsText.Split(Environment.NewLine);
             foreach (var symbol in symbolList)
             {
                 try
@@ -29,7 +29,8 @@ namespace UniversumUi
                     //response.EnsureSuccessStatusCode();
                     //string responseBody = await response.Content.ReadAsStringAsync();
 
-                    var uri = "http://localhost:1967/Yahoo/CurrentPrice?symbol=goog";
+                    //var uri = "http://localhost:1967/Yahoo/CurrentPrice?symbol=goog";
+                    var uri = $"{apiUrl}/CurrentPrice?symbol={symbol}";
                     string responseBody = await _httpClient.GetStringAsync(uri);
                     MessageEvent?.Invoke(this, new MessageEventArgs(responseBody));
                     // Above three lines can be replaced with new helper method below
@@ -37,10 +38,9 @@ namespace UniversumUi
 
                     Console.WriteLine(responseBody);
                 }
-                catch (HttpRequestException e)
+                catch (Exception e)
                 {
-                    Console.WriteLine("\nException Caught!");
-                    Console.WriteLine("Message :{0} ", e.Message);
+                    MessageEvent?.Invoke(this, new MessageEventArgs(e.ToString()));
                 }
             }
             
