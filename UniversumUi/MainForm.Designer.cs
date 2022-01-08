@@ -59,6 +59,7 @@
             this.btGo.TabIndex = 2;
             this.btGo.Text = ">>";
             this.btGo.UseVisualStyleBackColor = true;
+            this.btGo.Click += new System.EventHandler(this.btGo_Click);
             // 
             // MainForm
             // 
