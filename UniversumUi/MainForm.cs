@@ -41,8 +41,10 @@ namespace UniversumUi
         {
             var symbolsAsText = txtSymbols.Text;
             var apiUrl = txtHost.Text;
+            var separator = txtSeparator.Text;
+            var decimalSeparator = txtDecimalSeparator.Text;
 
-            new Thread(async () => await _processor.ProcessAsync(apiUrl, symbolsAsText))
+            new Thread(async () => await _processor.ProcessAsync(apiUrl, symbolsAsText, separator, decimalSeparator))
             { IsBackground = true }
             .Start();
         }

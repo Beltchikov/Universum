@@ -17,27 +17,20 @@ namespace UniversumUi
 
         public event MessageEventHandler? MessageEvent;
 
-        public async Task ProcessAsync(string apiUrl, string symbolsAsText)
+        public async Task ProcessAsync(string apiUrl, string symbolsAsText, string separator, string decimalSeparator)
         {
             var symbolList = symbolsAsText.Split(Environment.NewLine);
             foreach (var symbol in symbolList)
             {
                 try
                 {
-                    // TODO Roe
-                    string roe = await GetValueFromApi(apiUrl, "Roe", symbol);
-                    // LastEquity
-                    string lastEquity = await GetValueFromApi(apiUrl, "LastEquity", symbol);
-
-                    // TargetPrice
-                    string targetPrice = await GetValueFromApi(apiUrl, "TargetPrice", symbol);
-
-                    string currentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol);
-
-                    // SharesOutstanding
-                    string sharesOutstanding = await GetValueFromApi(apiUrl, "SharesOutstanding", symbol);
-
-                    string csvLine = $"{roe};{lastEquity};{targetPrice};{currentPrice};{sharesOutstanding}";
+                    string roe = await GetValueFromApi(apiUrl, "Roe", symbol, decimalSeparator);
+                    string lastEquity = await GetValueFromApi(apiUrl, "LastEquity", symbol, decimalSeparator);
+                    string targetPrice = await GetValueFromApi(apiUrl, "TargetPrice", symbol, decimalSeparator);
+                    string currentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol, decimalSeparator);
+                    string sharesOutstanding = await GetValueFromApi(apiUrl, "SharesOutstanding", symbol, decimalSeparator);
+                    
+                    string csvLine = $"{roe}{separator}{lastEquity}{separator}{targetPrice}{separator}{currentPrice}{separator}{sharesOutstanding}";
                     MessageEvent?.Invoke(this, new MessageEventArgs(csvLine));
                 }
                 catch (Exception e)
@@ -47,11 +40,12 @@ namespace UniversumUi
             }
         }
 
-        private async Task<string> GetValueFromApi(string apiUrl, string actionMethod, string symbol)
+        private async Task<string> GetValueFromApi(string apiUrl, string actionMethod, string symbol, string decimalSeparator)
         {
             var uriCurrentPrice = $"{apiUrl}/{actionMethod}?symbol={symbol}";
             string responseCurrentPrice = await _httpClient.GetStringAsync(uriCurrentPrice);
             responseCurrentPrice = responseCurrentPrice.Replace("[", "").Replace("]", "");
+            responseCurrentPrice = responseCurrentPrice.Replace(".", decimalSeparator);
             return responseCurrentPrice;
         }
     }

@@ -32,6 +32,8 @@
             this.txtResults = new System.Windows.Forms.TextBox();
             this.btGo = new System.Windows.Forms.Button();
             this.txtHost = new System.Windows.Forms.TextBox();
+            this.txtSeparator = new System.Windows.Forms.TextBox();
+            this.txtDecimalSeparator = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtSymbols
@@ -66,15 +68,33 @@
             // 
             this.txtHost.Location = new System.Drawing.Point(22, 12);
             this.txtHost.Name = "txtHost";
-            this.txtHost.Size = new System.Drawing.Size(293, 23);
+            this.txtHost.Size = new System.Drawing.Size(291, 23);
             this.txtHost.TabIndex = 3;
             this.txtHost.Text = "http://localhost:1967/Yahoo";
+            // 
+            // txtSeparator
+            // 
+            this.txtSeparator.Location = new System.Drawing.Point(351, 12);
+            this.txtSeparator.Name = "txtSeparator";
+            this.txtSeparator.Size = new System.Drawing.Size(30, 23);
+            this.txtSeparator.TabIndex = 4;
+            this.txtSeparator.Text = ";";
+            // 
+            // txtDecimalSeparator
+            // 
+            this.txtDecimalSeparator.Location = new System.Drawing.Point(387, 12);
+            this.txtDecimalSeparator.Name = "txtDecimalSeparator";
+            this.txtDecimalSeparator.Size = new System.Drawing.Size(30, 23);
+            this.txtDecimalSeparator.TabIndex = 5;
+            this.txtDecimalSeparator.Text = ",";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1225, 773);
+            this.Controls.Add(this.txtDecimalSeparator);
+            this.Controls.Add(this.txtSeparator);
             this.Controls.Add(this.txtHost);
             this.Controls.Add(this.btGo);
             this.Controls.Add(this.txtResults);
@@ -92,5 +112,7 @@
         private System.Windows.Forms.TextBox txtResults;
         private System.Windows.Forms.Button btGo;
         private System.Windows.Forms.TextBox txtHost;
+        private System.Windows.Forms.TextBox txtSeparator;
+        private System.Windows.Forms.TextBox txtDecimalSeparator;
     }
 }
