@@ -25,16 +25,20 @@ namespace UniversumUi
                 try
                 {
                     // TODO Roe
-
+                    string roe = await GetValueFromApi(apiUrl, "Roe", symbol);
                     // LastEquity
+                    string lastEquity = await GetValueFromApi(apiUrl, "LastEquity", symbol);
 
                     // TargetPrice
+                    string targetPrice = await GetValueFromApi(apiUrl, "TargetPrice", symbol);
 
-                    string responseCurrentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol);
+                    string currentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol);
 
                     // SharesOutstanding
+                    string sharesOutstanding = await GetValueFromApi(apiUrl, "SharesOutstanding", symbol);
 
-                    MessageEvent?.Invoke(this, new MessageEventArgs(responseCurrentPrice));
+                    string csvLine = $"{roe};{lastEquity};{targetPrice};{currentPrice};{sharesOutstanding}";
+                    MessageEvent?.Invoke(this, new MessageEventArgs(csvLine));
                 }
                 catch (Exception e)
                 {
