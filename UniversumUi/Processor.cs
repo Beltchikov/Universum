@@ -30,8 +30,7 @@ namespace UniversumUi
 
                     // TargetPrice
 
-                    var uriCurrentPrice = $"{apiUrl}/CurrentPrice?symbol={symbol}";
-                    string responseCurrentPrice = await _httpClient.GetStringAsync(uriCurrentPrice);
+                    string responseCurrentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol);
 
                     // SharesOutstanding
 
@@ -44,5 +43,12 @@ namespace UniversumUi
             }
         }
 
+        private async Task<string> GetValueFromApi(string apiUrl, string actionMethod, string symbol)
+        {
+            var uriCurrentPrice = $"{apiUrl}/{actionMethod}?symbol={symbol}";
+            string responseCurrentPrice = await _httpClient.GetStringAsync(uriCurrentPrice);
+            responseCurrentPrice = responseCurrentPrice.Replace("[", "").Replace("]", "");
+            return responseCurrentPrice;
+        }
     }
 }
