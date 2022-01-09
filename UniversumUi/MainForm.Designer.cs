@@ -41,6 +41,7 @@
             this.txtSymbols.Location = new System.Drawing.Point(22, 48);
             this.txtSymbols.Multiline = true;
             this.txtSymbols.Name = "txtSymbols";
+            this.txtSymbols.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtSymbols.Size = new System.Drawing.Size(218, 713);
             this.txtSymbols.TabIndex = 0;
             // 
@@ -50,6 +51,7 @@
             this.txtResults.Location = new System.Drawing.Point(309, 48);
             this.txtResults.Multiline = true;
             this.txtResults.Name = "txtResults";
+            this.txtResults.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtResults.Size = new System.Drawing.Size(816, 713);
             this.txtResults.TabIndex = 1;
             // 
