@@ -30,7 +30,7 @@ namespace UniversumUi
                     string currentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol, decimalSeparator);
                     string sharesOutstanding = await GetValueFromApi(apiUrl, "SharesOutstanding", symbol, decimalSeparator);
                     
-                    string csvLine = $"{roe}{separator}{lastEquity}{separator}{targetPrice}{separator}{currentPrice}{separator}{sharesOutstanding}";
+                    string csvLine = $"{symbol}{separator}{roe}{separator}{lastEquity}{separator}{targetPrice}{separator}{currentPrice}{separator}{sharesOutstanding}";
                     MessageEvent?.Invoke(this, new MessageEventArgs(csvLine));
                 }
                 catch (Exception e)

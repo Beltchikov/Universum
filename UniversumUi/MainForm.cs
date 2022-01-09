@@ -31,9 +31,7 @@ namespace UniversumUi
         {
             Invoke(new Action(() =>
             {
-                var oldText = txtResults.Text;
-                var newText = e.Message + Environment.NewLine + oldText;
-                txtResults.Text = newText;
+                txtResults.Text += e.Message + Environment.NewLine;
             }));
         }
 
