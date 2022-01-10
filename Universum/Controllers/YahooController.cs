@@ -141,5 +141,21 @@ namespace Universum.Controllers
             string result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
             return Json(new[] { result });
         }
+
+        [HttpGet]
+        public ActionResult CapEx(string symbol)
+        {
+            var url = @$"https://finance.yahoo.com/quote/{symbol}/cash-flow?p={symbol}";
+            var pattern1 = @"(?<=\""capitalExpenditures\"":\{.{1,10}raw\"":)[-\d]+(?=,)";
+            var pattern2 = @"";
+
+            string result = _simpleBrowser.OneValueResult(url, pattern1, pattern2);
+
+            result = result.Replace(",", "");
+            double doubleResult = Convert.ToDouble(result, new CultureInfo("EN-us")) / 1000000;
+            doubleResult = Math.Round(doubleResult, 2);
+
+            return Json(new[] { doubleResult });
+        }
     }
 }
