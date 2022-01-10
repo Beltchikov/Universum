@@ -72,7 +72,7 @@ namespace Universum.Tests
             yahooConverter.Received(2).RemoveCommaivideBy1000000Round2(Arg.Any<string>());
         }
 
-            [Fact]
+        [Fact]
         public void ReturnsTargetPrice()
         {
             string targetPriceExpected = "45.78";
@@ -115,7 +115,7 @@ namespace Universum.Tests
         [Fact]
         public void ReturnsLastEquity()
         {
-            string lastEquityReceived= "133360000000";
+            string lastEquityReceived = "133360000000";
             double lastEquityExpected = 133360;
 
             var simpleBrowser = Substitute.For<ISimpleBrowser>();
@@ -209,7 +209,7 @@ namespace Universum.Tests
             var sut = new YahooController(simpleBrowser, new YahooConverter());
             JsonResult jsonResult = (JsonResult)sut.LastIncome("FB");
             double[] lastIncomeArray = (double[])jsonResult.Value;
-            var lastIncome= lastIncomeArray[0];
+            var lastIncome = lastIncomeArray[0];
 
             Assert.Equal(lastIncomeExpected, lastIncome);
         }
@@ -218,17 +218,33 @@ namespace Universum.Tests
         public void CallOneValueResult()
         {
             var simpleBrowser = Substitute.For<ISimpleBrowser>();
-            //simpleBrowser.OneValueResult(
-            //        Arg.Any<string>(),
-            //        Arg.Any<string>(),
-            //        Arg.Any<string>())
-            //    .Returns(roeReceived);
             var yahooConverter = Substitute.For<IYahooConverter>();
 
             var sut = new YahooController(simpleBrowser, yahooConverter);
             JsonResult jsonResult = (JsonResult)sut.CompanyName("MSFT");
 
             simpleBrowser.Received().OneValueResult(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        }
+
+        [Fact]
+        public void ReturnCapEx()
+        {
+            string capExReceived = "133360000000";
+            double capExExpected = 133360;
+
+            var simpleBrowser = Substitute.For<ISimpleBrowser>();
+            simpleBrowser.OneValueResult(
+                    Arg.Any<string>(),
+                    Arg.Any<string>(),
+                    Arg.Any<string>())
+                .Returns(capExReceived);
+
+            var sut = new YahooController(simpleBrowser, new YahooConverter());
+            JsonResult jsonResult = (JsonResult)sut.CapEx("FB");
+            double[] lastIncomeArray = (double[])jsonResult.Value;
+            var lastIncome = lastIncomeArray[0];
+
+            Assert.Equal(capExExpected, lastIncome);
         }
     }
 }
