@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace UniversumUi
     public class Processor : IProcessor
     {
         private HttpClient _httpClient;
+        private const string LOG_FILE = "UniversumUi.log";
 
         public Processor(HttpClient httpClient)
         {
@@ -22,9 +24,11 @@ namespace UniversumUi
             var symbolList = symbolsAsText.Split(Environment.NewLine);
             foreach (var symbol in symbolList)
             {
+                string csvLine;
                 try
                 {
                     string roe = await GetValueFromApi(apiUrl, "Roe", symbol, decimalSeparator);
+                    roe = (Convert.ToDouble(roe) / 100).ToString();
                     string lastEquity = await GetValueFromApi(apiUrl, "LastEquity", symbol, decimalSeparator);
                     string lastIncome = await GetValueFromApi(apiUrl, "LastIncome", symbol, decimalSeparator);
                     string capEx = await GetValueFromApi(apiUrl, "CapEx", symbol, decimalSeparator);
@@ -32,15 +36,19 @@ namespace UniversumUi
                     string currentPrice = await GetValueFromApi(apiUrl, "CurrentPrice", symbol, decimalSeparator);
                     string sharesOutstanding = await GetValueFromApi(apiUrl, "SharesOutstanding", symbol, decimalSeparator);
 
-                    string csvLine = $"{symbol}{separator}{roe}{separator}{lastEquity}{separator}" +
+                    csvLine = $"{symbol}{separator}{roe}{separator}{lastEquity}{separator}" +
                         $"{lastIncome}{separator}{capEx}{separator}" +
                         $"{targetPrice}{separator}{currentPrice}{separator}{sharesOutstanding}";
-                    MessageEvent?.Invoke(this, new MessageEventArgs(csvLine));
+
                 }
                 catch (Exception e)
                 {
-                    MessageEvent?.Invoke(this, new MessageEventArgs(e.ToString()));
+                    File.AppendAllText(LOG_FILE, e.ToString());
+                    csvLine = $"{symbol}{separator}{separator}{separator}" +
+                        $"{separator}{separator}" +
+                        $"{separator}{separator}";
                 }
+                MessageEvent?.Invoke(this, new MessageEventArgs(csvLine));
             }
         }
 
