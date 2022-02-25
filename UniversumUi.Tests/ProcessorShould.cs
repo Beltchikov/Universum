@@ -9,7 +9,8 @@ namespace UniversumUi.Tests
         [Fact]
         public void CallHttpClient()
         {
-            //var processor = new AutoFixture.Fixture().Create<UniversumUi.IProcessor>();
+            //var sut = new Fixture().Create<IProcessor>();
+            //sut.ProcessAsync("", "", "", "");
         }
     }
 }
