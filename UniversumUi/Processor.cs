@@ -17,9 +17,9 @@ namespace UniversumUi
 
         public event MessageEventHandler? MessageEvent;
 
-        public async Task ProcessAsync(string apiUrl, string symbolsAsText, string separator, string decimalSeparator)
+        public async Task ProcessAsync(string apiUrl, string symbolsAsString, string separator, string decimalSeparator)
         {
-            var symbolList = symbolsAsText.Split(Environment.NewLine);
+            var symbolList = symbolsAsString.Split(Environment.NewLine);
             foreach (var symbol in symbolList)
             {
                 try
@@ -42,8 +42,8 @@ namespace UniversumUi
 
         private async Task<string> GetValueFromApi(string apiUrl, string actionMethod, string symbol, string decimalSeparator)
         {
-            var uriCurrentPrice = $"{apiUrl}/{actionMethod}?symbol={symbol}";
-            string responseCurrentPrice = await _httpClient.GetStringAsync(uriCurrentPrice);
+            var uri = $"{apiUrl}/{actionMethod}?symbol={symbol}";
+            string responseCurrentPrice = await _httpClient.GetStringAsync(uri);
             responseCurrentPrice = responseCurrentPrice.Replace("[", "").Replace("]", "");
             responseCurrentPrice = responseCurrentPrice.Replace(".", decimalSeparator);
             return responseCurrentPrice;
